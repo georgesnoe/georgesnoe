@@ -33,6 +33,8 @@ I am particularly interested in:
 
 If you have a project in mind that could match my profile and interests, do not hesitate to contact me! I am open to any enriching and motivating collaboration proposal.
 
+[![committers.top badge](https://user-badge.committers.top/togo/georgesnoe.svg)](https://user-badge.committers.top/togo/georgesnoe)
+
 <!---
 georges1386/georges1386 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 You can click the Preview link to take a look at your changes.

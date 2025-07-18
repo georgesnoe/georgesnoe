@@ -59,7 +59,7 @@
 - 🚀 Looking to contribute to open source and innovative teams
 - 💬 Love sharing ideas, learning, and building in public
 - 👥 Interested in web dev, AI, creative apps, and ambitious projects
-- 📫 Let’s connect: [LinkedIn](https://www.linkedin.com/) | [Email](mailto:your@email.com)
+- 📫 Let’s connect: [LinkedIn](https://www.linkedin.com/akgn) | [Email](mailto:georges.ahombo@gmail.com)
 
 ---
 

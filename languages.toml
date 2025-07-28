@@ -30,14 +30,18 @@ scss = { validate = { enable = true } }
 less = { validate = { enable = true } }
 provideFormatter = true
 
-[[language]]
-name = "tailwindcss"
-scope = "source.css"
-injection-regex = "(postcss|css|html)"
-file-types = ["css"]
-roots = ["tailwind.config.js","tailwind.config.cjs"]
-language-server = { command = "tailwindcss-language-server", args = ["-vvv", "--stdio"] }
-config = { }
+# [[language]]
+# name = "tailwindcss"
+# scope = "source.css"
+# injection-regex = "(postcss|css|html)"
+# file-types = ["css"]
+# roots = ["tailwind.config.js","tailwind.config.cjs"]
+# language-server = { command = "tailwindcss-language-server", args = ["-vvv", "--stdio"] }
+# config = { }
+
+[language-server.tailwindcss-language-server]
+command = "tailwindcss-language-server"
+args = ["--stdio"]
 
 
 [[language]]

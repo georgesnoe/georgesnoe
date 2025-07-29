@@ -30,6 +30,10 @@ scss = { validate = { enable = true } }
 less = { validate = { enable = true } }
 provideFormatter = true
 
+[language-server.tailwindcss-language-server]
+command = "tailwindcss-language-server"
+args = ["--stdio"]
+
 # [[language]]
 # name = "tailwindcss"
 # scope = "source.css"
@@ -37,35 +41,30 @@ provideFormatter = true
 # file-types = ["css"]
 # roots = ["tailwind.config.js","tailwind.config.cjs"]
 # language-server = { command = "tailwindcss-language-server", args = ["-vvv", "--stdio"] }
-# config = { }
-
-[language-server.tailwindcss-language-server]
-command = "tailwindcss-language-server"
-args = ["--stdio"]
 
 
 [[language]]
 name = "typescript"
 # language-servers = ["typescript-language-server", "eslint", "emmet-ls"]
-language-servers = ["typescript-language-server", "eslint", "tailwindcss-language-server"]
+language-servers = ["typescript-language-server", "eslint"]
 formatter = { command = "prettier", args = [ "--parser", "typescript" ] }
 auto-format = true
 
 [[language]]
 name = "tsx"
-language-servers = ["typescript-language-server", "eslint", "tailwindcss-language-server"]
+language-servers = ["typescript-language-server", "eslint", "emmet-ls", "tailwindcss-language-server"]
 formatter = { command = "prettier", args = [ "--parser", "typescript" ] }
 auto-format = true
 
 [[language]]
 name = "javascript"
-language-servers = ["typescript-language-server", "eslint", "tailwindcss-language-server"]
+language-servers = ["typescript-language-server", "eslint"]
 formatter = { command = "prettier", args = [ "--parser", "typescript" ] }
 auto-format = true
 
 [[language]]
 name = "jsx"
-language-servers = ["typescript-language-server", "eslint", "tailwindcss-language-server"]
+language-servers = ["typescript-language-server", "eslint", "emmet-ls", "tailwindcss-language-server"]
 formatter = { command = "prettier", args = [ "--parser", "typescript" ] }
 auto-format = true
 

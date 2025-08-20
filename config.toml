@@ -2,10 +2,14 @@ neovim-bin = "/usr/bin/nvim"
 
 [font]
 normal = { family = "CaskaydiaCove NF", style = "W700" }
+italic = { family = "CaskaydiaCove NF", style = "W700" }
+bold = { family = "CaskaydiaCove NF", style = "W700" }
+bold_italic = { family = "CaskaydiaCove NF", style = "W700" }
 size = 10.0
 hinting = "none"
 edging = "antialias"
 
-[options]
-guifont = "JetBrainsMono Nerd Font:h14"
-linespace = 0
+
+
+#[options]
+#guifont = "CaskaydiaCove NF:h10:b:i:#e-antialias:#e-none"

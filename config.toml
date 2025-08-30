@@ -1,4 +1,6 @@
-neovim-bin = "/usr/bin/nvim"
+vsync = false
+fork = true
+idle = true
 
 [font]
 normal = { family = "CaskaydiaCove NF", style = "W700" }

@@ -1,17 +1,11 @@
-vsync = false
+#neovim-bin = "/home/georgesnoe/.local/bin/neovim"
 fork = true
-idle = true
 
 [font]
 normal = { family = "CaskaydiaCove NF", style = "W700" }
 italic = { family = "CaskaydiaCove NF", style = "W700" }
 bold = { family = "CaskaydiaCove NF", style = "W700" }
 bold_italic = { family = "CaskaydiaCove NF", style = "W700" }
-size = 10.0
+size = 10
 hinting = "none"
 edging = "antialias"
-
-
-
-#[options]
-#guifont = "CaskaydiaCove NF:h10:b:i:#e-antialias:#e-none"

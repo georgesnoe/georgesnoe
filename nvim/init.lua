@@ -1218,6 +1218,38 @@ local spinner_symbols = {
 }
 local spinner_symbols_len = 10
 
+-- require("lualine").setup({
+--   sections = {
+--     lualine_x = {
+--       function()
+--         local stats = require("codecompanion").buf_get_chat(0)
+--         print(stats.tokens)
+--         if stats and stats.tokens > 0 then
+--           return string.format("󰌪 %d / %d", stats.tokens, stats.total_tokens)
+--         end
+--         return "󰌪 "
+--       end,
+--     },
+--   },
+-- })
+
+-- Helper to find the project root based on a marker
+local function is_angular_project()
+  local root_files = { "angular.json" } -- Can add 'nx.json' for monorepos
+  local root = vim.fs.find(root_files, { upward = true, stop = vim.uv.os_homedir() })[1]
+  return root ~= nil
+end
+
+-- Create an autocommand to switch filetype for all .html files in Angular projects
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*.html",
+  callback = function()
+    if is_angular_project() then
+      vim.opt_local.filetype = "htmlangular"
+    end
+  end,
+})
+
 -- Initializer
 function M:init(options)
   M.super.init(self, options)

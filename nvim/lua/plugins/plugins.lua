@@ -214,4 +214,13 @@ return {
 
   -- Catppuccin
   { "catppuccin/nvim", name = "catppuccin", priority = 1000, event = "VeryLazy" },
+
+  -- Indent blankline
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    ---@module "ibl"
+    ---@type ibl.config
+    opts = {},
+  },
 }

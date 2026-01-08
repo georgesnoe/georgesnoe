@@ -1,11 +1,22 @@
-#neovim-bin = "/home/georgesnoe/.local/bin/neovim"
 fork = true
+frame = "full"
+idle = false
+no-multigrid = true
+srgb = false # platform-specific: false (Linux/macOS) or true (Windows)
+tabs = true
+title-hidden = false
+vsync = true
+maximized = true
 
 [font]
-normal = { family = "CaskaydiaCove NF", style = "W700" }
-italic = { family = "CaskaydiaCove NF", style = "W700" }
-bold = { family = "CaskaydiaCove NF", style = "W700" }
-bold_italic = { family = "CaskaydiaCove NF", style = "W700" }
+normal = { family = "Maple Mono NF", style = "W900" }
+italic = { family = "Maple Mono NF", style = "W900" }
+bold = { family = "Maple Mono NF", style = "W900" }
+bold_italic = { family = "Maple Mono NF", style = "W900" }
 size = 10
 hinting = "none"
 edging = "antialias"
+
+[box-drawing]
+mode = "font-glyph"
+

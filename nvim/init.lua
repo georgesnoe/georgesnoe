@@ -86,48 +86,11 @@ end
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
 
--- vim.api.nvim_create_autocmd("BufWritePost", {
---   pattern = "*.prisma",
---   callback = function()
---     vim.lsp.buf.format({
---       async = true, -- Obligatoire en BufWritePre pour que le formatage soit sauvé
---     })
---   end,
--- })
+vim.cmd("colorscheme tokyonight-day")
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   pattern = "*.arb",
   command = "setfiletype json",
-})
-
--- require("tokyonight").setup({
---   styles = {
---     comments = {
---       italic = false,
---     },
---     keywords = {
---       italic = false,
---     },
---     functions = {
---       italic = false,
---     },
---     variables = {
---       italic = false,
---     },
---     sidebars = "dark",
---     floats = "dark",
---   },
---   on_colors = function(colors) end,
---   on_highlights = function(highlights, colors) end,
--- })
-
--- vim.cmd("colorscheme catppuccin-latte")
-
-require("mason").setup({
-  registries = {
-    "github:mason-org/mason-registry",
-    "github:Crashdummyy/mason-registry",
-  },
 })
 
 require("blink-cmp").setup({
@@ -152,22 +115,6 @@ require("blink-cmp").setup({
 })
 
 require("codecompanion").setup({
-  -- adapters = {
-  --   http = {
-  --     gemini = function()
-  --       return require("codecompanion.adapters").extend("gemini", {
-  --         schema = {
-  --           model = {
-  --             default = "gemini-3-flash-preview",
-  --           },
-  --         },
-  --         env = {
-  --           GEMINI_API_KEY = "GEMINI_API_KEY",
-  --         },
-  --       })
-  --     end,
-  --   },
-  -- },
   interactions = {
     inline = {
       keymaps = {
@@ -183,19 +130,26 @@ require("codecompanion").setup({
       },
       adapter = {
         name = "githubmodels",
-        model = "gpt-4o",
+        model = "DeepSeek-R1",
       },
     },
     chat = {
-      adapter = {
-        name = "githubmodels",
-        model = "gpt-4o",
-      },
+      adapter = "gemini_cli",
+      -- adapter = {
+      --   name = "githubmodels",
+      --   model = "DeepSeek-R1",
+      -- },
     },
     cmd = {
       adapter = {
         name = "githubmodels",
-        model = "gpt-4o",
+        model = "DeepSeek-R1",
+      },
+    },
+    backgrounds = {
+      adapter = {
+        name = "githubmodels",
+        model = "DeepSeek-R1",
       },
     },
   },
@@ -211,20 +165,35 @@ require("codecompanion").setup({
       },
     },
   },
+  adapters = {
+    acp = {
+      gemini_cli = function()
+        return require("codecompanion.adapters").extend("gemini_cli", {
+          commands = {
+            default = {
+              "gemini",
+              "--experimental-acp",
+            },
+          },
+          defaults = {
+            auth_method = "oauth-personal",
+            timeout = 600000, -- 10 minutes
+          },
+        })
+      end,
+    },
+  },
   extensions = {
     mcphub = {
       callback = "mcphub.extensions.codecompanion",
       opts = {
-        -- MCP Tools
-        make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
-        show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
-        add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
-        show_result_in_chat = true, -- Show tool results directly in chat buffer
-        format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
-        -- MCP Resources
-        make_vars = true, -- Convert MCP resources to #variables for prompts
-        -- MCP Prompts
-        make_slash_commands = true, -- Add MCP prompts as /slash commands
+        make_tools = true,
+        show_server_tools_in_chat = true,
+        add_mcp_prefix_to_tool_names = false,
+        show_result_in_chat = true,
+        format_tool = nil,
+        make_vars = true,
+        make_slash_commands = true,
       },
     },
   },
@@ -232,35 +201,30 @@ require("codecompanion").setup({
 
 require("mcphub").setup({
   auto_approve = function(params)
-    -- Respect CodeCompanion's auto tool mode when enabled
     if vim.g.codecompanion_auto_tool_mode == true then
-      return true -- Auto approve when CodeCompanion auto-tool mode is on
+      return true
     end
 
-    -- Auto-approve GitHub issue reading
     if params.server_name == "github" and params.tool_name == "get_issue" then
-      return true -- Auto approve
+      return true
     end
 
-    -- Block access to private repos
     if params.arguments.repo == "private" then
-      return "You can't access my private repo" -- Error message
+      return "You can't access my private repo"
     end
 
-    -- Auto-approve safe file operations in current project
     if params.tool_name == "read_file" then
       local path = params.arguments.path or ""
       if path:match("^" .. vim.fn.getcwd()) then
-        return true -- Auto approve
+        return true
       end
     end
 
-    -- Check if tool is configured for auto-approval in servers.json
     if params.is_auto_approved_in_server then
-      return true -- Respect servers.json configuration
+      return true
     end
 
-    return false -- Show confirmation prompt
+    return false
   end,
 })
 
@@ -306,50 +270,21 @@ require("neo-tree").setup({
 })
 
 require("render-markdown").setup({
-  -- Whether markdown should be rendered by default.
   enabled = true,
-  -- Vim modes that will show a rendered view of the markdown file, :h mode(), for all enabled
-  -- components. Individual components can be enabled for other modes. Remaining modes will be
-  -- unaffected by this plugin.
   render_modes = { "n", "c", "t" },
-  -- Maximum file size (in MB) that this plugin will attempt to render.
-  -- File larger than this will effectively be ignored.
   max_file_size = 10.0,
-  -- Milliseconds that must pass before updating marks, updates occur.
-  -- within the context of the visible window, not the entire buffer.
   debounce = 100,
-  -- Pre configured settings that will attempt to mimic various target user experiences.
-  -- User provided settings will take precedence.
-  -- | obsidian | mimic Obsidian UI                                          |
-  -- | lazy     | will attempt to stay up to date with LazyVim configuration |
-  -- | none     | does nothing                                               |
   preset = "none",
-  -- The level of logs to write to file: vim.fn.stdpath('state') .. '/render-markdown.log'.
-  -- Only intended to be used for plugin development / debugging.
   log_level = "off",
-  -- Print runtime of main update method.
-  -- Only intended to be used for plugin development / debugging.
   log_runtime = false,
-  -- Filetypes this plugin will run on.
   file_types = { "markdown", "codecompanion" },
-  -- Takes buffer as input, if it returns true this plugin will not attach to the buffer.
   ignore = function()
     return false
   end,
-  -- Whether markdown should be rendered when nested inside markdown, i.e. markdown code block
-  -- inside markdown file.
   nested = true,
-  -- Additional events that will trigger this plugin's render loop.
   change_events = {},
-  -- Whether the treesitter highlighter should be restarted after this plugin attaches to its
-  -- first buffer for the first time. May be necessary if this plugin is lazy loaded to clear
-  -- highlights that have been dynamically disabled.
   restart_highlighter = false,
   injections = {
-    -- Out of the box language injections for known filetypes that allow markdown to be interpreted
-    -- in specified locations, see :h treesitter-language-injections.
-    -- Set enabled to false in order to disable.
-
     gitcommit = {
       enabled = true,
       query = [[
@@ -361,8 +296,6 @@ require("render-markdown").setup({
     },
   },
   patterns = {
-    -- Highlight patterns to disable for filetypes, i.e. lines concealed around code blocks
-
     markdown = {
       disable = true,
       directives = {
@@ -372,29 +305,10 @@ require("render-markdown").setup({
     },
   },
   anti_conceal = {
-    -- This enables hiding added text on the line the cursor is on.
     enabled = true,
-    -- Modes to disable anti conceal feature.
     disabled_modes = false,
-    -- Number of lines above cursor to show.
     above = 0,
-    -- Number of lines below cursor to show.
     below = 0,
-    -- Which elements to always show, ignoring anti conceal behavior. Values can either be
-    -- booleans to fix the behavior or string lists representing modes where anti conceal
-    -- behavior will be ignored. Valid values are:
-    --   bullet
-    --   callout
-    --   check_icon, check_scope
-    --   code_background, code_border, code_language
-    --   dash
-    --   head_background, head_border, head_icon
-    --   indent
-    --   link
-    --   quote
-    --   sign
-    --   table_border
-    --   virtual_lines
     ignore = {
       bullet = true,
       callout = true,
@@ -416,50 +330,29 @@ require("render-markdown").setup({
     },
   },
   padding = {
-    -- Highlight to use when adding whitespace, should match background.
     highlight = "Normal",
   },
   latex = {
-    -- Turn on / off latex rendering.
     enabled = true,
-    -- Additional modes to render latex.
     render_modes = false,
-    -- Executable used to convert latex formula to rendered unicode.
-    -- If a list is provided the first command available on the system is used.
     converter = { "utftex", "latex2text" },
-    -- Highlight for latex blocks.
     highlight = "RenderMarkdownMath",
-    -- Determines where latex formula is rendered relative to block.
-    -- | above  | above latex block                               |
-    -- | below  | below latex block                               |
-    -- | center | centered with latex block (must be single line) |
     position = "center",
-    -- Number of empty lines above latex blocks.
     top_pad = 0,
-    -- Number of empty lines below latex blocks.
     bottom_pad = 0,
   },
   on = {
-    -- Called when plugin initially attaches to a buffer.
     attach = function() end,
-    -- Called before adding marks to the buffer for the first time.
     initial = function() end,
-    -- Called after plugin renders a buffer.
     render = function() end,
-    -- Called after plugin clears a buffer.
     clear = function() end,
   },
   completions = {
-    -- Settings for blink.cmp completions source
     blink = { enabled = true },
-    -- Settings for coq_nvim completions source
     coq = { enabled = false },
-    -- Settings for in-process language server completions
     lsp = { enabled = true },
     filter = {
       callout = function()
-        -- example to exclude obsidian callouts
-        -- return value.category ~= 'obsidian'
         return true
       end,
       checkbox = function()
@@ -468,65 +361,24 @@ require("render-markdown").setup({
     },
   },
   heading = {
-    -- Useful context to have when evaluating values.
-    -- | level    | the number of '#' in the heading marker         |
-    -- | sections | for each level how deeply nested the heading is |
-
-    -- Turn on / off heading icon & background rendering.
     enabled = true,
-    -- Additional modes to render headings.
     render_modes = false,
-    -- Turn on / off atx heading rendering.
     atx = true,
-    -- Turn on / off setext heading rendering.
     setext = true,
-    -- Turn on / off sign column related rendering.
     sign = true,
-    -- Replaces '#+' of 'atx_h._marker'.
-    -- Output is evaluated depending on the type.
-    -- | function | `value(context)`              |
-    -- | string[] | `cycle(value, context.level)` |
     icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
-    -- Determines how icons fill the available space.
-    -- | right   | '#'s are concealed and icon is appended to right side                      |
-    -- | inline  | '#'s are concealed and icon is inlined on left side                        |
-    -- | overlay | icon is left padded with spaces and inserted on left hiding additional '#' |
     position = "overlay",
-    -- Added to the sign column if enabled.
-    -- Output is evaluated by `cycle(value, context.level)`.
     signs = { "󰫎 " },
-    -- Width of the heading background.
-    -- | block | width of the heading text |
-    -- | full  | full width of the window  |
-    -- Can also be a list of the above values evaluated by `clamp(value, context.level)`.
     width = "full",
-    -- Amount of margin to add to the left of headings.
-    -- Margin available space is computed after accounting for padding.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
-    -- Can also be a list of numbers evaluated by `clamp(value, context.level)`.
     left_margin = 0,
-    -- Amount of padding to add to the left of headings.
-    -- Output is evaluated using the same logic as 'left_margin'.
     left_pad = 0,
-    -- Amount of padding to add to the right of headings when width is 'block'.
-    -- Output is evaluated using the same logic as 'left_margin'.
     right_pad = 0,
-    -- Minimum width to use for headings when width is 'block'.
-    -- Can also be a list of integers evaluated by `clamp(value, context.level)`.
     min_width = 0,
-    -- Determines if a border is added above and below headings.
-    -- Can also be a list of booleans evaluated by `clamp(value, context.level)`.
     border = false,
-    -- Always use virtual lines for heading borders instead of attempting to use empty lines.
     border_virtual = false,
-    -- Highlight the start of the border using the foreground highlight.
     border_prefix = false,
-    -- Used above heading for border.
     above = "▄",
-    -- Used below heading for border.
     below = "▀",
-    -- Highlight for the heading icon and extends through the entire line.
-    -- Output is evaluated by `clamp(value, context.level)`.
     backgrounds = {
       "RenderMarkdownH1Bg",
       "RenderMarkdownH2Bg",
@@ -535,8 +387,6 @@ require("render-markdown").setup({
       "RenderMarkdownH5Bg",
       "RenderMarkdownH6Bg",
     },
-    -- Highlight for the heading and sign icons.
-    -- Output is evaluated using the same logic as 'backgrounds'.
     foregrounds = {
       "RenderMarkdownH1",
       "RenderMarkdownH2",
@@ -545,265 +395,107 @@ require("render-markdown").setup({
       "RenderMarkdownH5",
       "RenderMarkdownH6",
     },
-    -- Define custom heading patterns which allow you to override various properties based on
-    -- the contents of a heading.
-    -- The key is for healthcheck and to allow users to change its values, value type below.
-    -- | pattern    | matched against the heading text @see :h lua-patterns |
-    -- | icon       | optional override for the icon                        |
-    -- | background | optional override for the background                  |
-    -- | foreground | optional override for the foreground                  |
     custom = {},
   },
   paragraph = {
-    -- Useful context to have when evaluating values.
-    -- | text | text value of the node |
-
-    -- Turn on / off paragraph rendering.
     enabled = true,
-    -- Additional modes to render paragraphs.
     render_modes = false,
-    -- Amount of margin to add to the left of paragraphs.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
-    -- Output is evaluated depending on the type.
-    -- | function | `value(context)` |
-    -- | number   | `value`          |
     left_margin = 0,
-    -- Amount of padding to add to the first line of each paragraph.
-    -- Output is evaluated using the same logic as 'left_margin'.
     indent = 0,
-    -- Minimum width to use for paragraphs.
     min_width = 0,
   },
   code = {
-    -- Turn on / off code block & inline code rendering.
     enabled = true,
-    -- Additional modes to render code blocks.
     render_modes = false,
-    -- Turn on / off sign column related rendering.
     sign = true,
-    -- Whether to conceal nodes at the top and bottom of code blocks.
     conceal_delimiters = true,
-    -- Turn on / off language heading related rendering.
     language = true,
-    -- Determines where language icon is rendered.
-    -- | right | right side of code block |
-    -- | left  | left side of code block  |
     position = "right",
-    -- Whether to include the language icon above code blocks.
     language_icon = true,
-    -- Whether to include the language name above code blocks.
     language_name = true,
-    -- Whether to include the language info above code blocks.
     language_info = true,
-    -- Amount of padding to add around the language.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
     language_pad = 0,
-    -- A list of language names for which background highlighting will be disabled.
-    -- Likely because that language has background highlights itself.
-    -- Use a boolean to make behavior apply to all languages.
-    -- Borders above & below blocks will continue to be rendered.
     disable_background = { "diff" },
-    -- Width of the code block background.
-    -- | block | width of the code block  |
-    -- | full  | full width of the window |
     width = "full",
-    -- Amount of margin to add to the left of code blocks.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
-    -- Margin available space is computed after accounting for padding.
     left_margin = 0,
-    -- Amount of padding to add to the left of code blocks.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
     left_pad = 0,
-    -- Amount of padding to add to the right of code blocks when width is 'block'.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
     right_pad = 0,
-    -- Minimum width to use for code blocks when width is 'block'.
     min_width = 0,
-    -- Determines how the top / bottom of code block are rendered.
-    -- | none  | do not render a border                               |
-    -- | thick | use the same highlight as the code body              |
-    -- | thin  | when lines are empty overlay the above & below icons |
-    -- | hide  | conceal lines unless language name or icon is added  |
     border = "thick",
-    -- Used above code blocks to fill remaining space around language.
     language_border = "█",
-    -- Added to the left of language.
     language_left = "",
-    -- Added to the right of language.
     language_right = "",
-    -- Used above code blocks for thin border.
     above = "▄",
-    -- Used below code blocks for thin border.
     below = "▀",
-    -- Turn on / off inline code related rendering.
     inline = true,
-    -- Icon to add to the left of inline code.
     inline_left = "",
-    -- Icon to add to the right of inline code.
     inline_right = "",
-    -- Padding to add to the left & right of inline code.
     inline_pad = 0,
-    -- Highlight for code blocks.
     highlight = "RenderMarkdownCode",
-    -- Highlight for code info section, after the language.
     highlight_info = "RenderMarkdownCodeInfo",
-    -- Highlight for language, overrides icon provider value.
     highlight_language = nil,
-    -- Highlight for border, use false to add no highlight.
     highlight_border = "RenderMarkdownCodeBorder",
-    -- Highlight for language, used if icon provider does not have a value.
     highlight_fallback = "RenderMarkdownCodeFallback",
-    -- Highlight for inline code.
     highlight_inline = "RenderMarkdownCodeInline",
-    -- Determines how code blocks & inline code are rendered.
-    -- | none     | { enabled = false }                           |
-    -- | normal   | { language = false }                          |
-    -- | language | { disable_background = true, inline = false } |
-    -- | full     | uses all default values                       |
     style = "full",
   },
   dash = {
-    -- Useful context to have when evaluating values.
-    -- | width | width of the current window |
-
-    -- Turn on / off thematic break rendering.
     enabled = true,
-    -- Additional modes to render dash.
     render_modes = false,
-    -- Replaces '---'|'***'|'___'|'* * *' of 'thematic_break'.
-    -- The icon gets repeated across the window's width.
     icon = "─",
-    -- Width of the generated line.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
-    -- Output is evaluated depending on the type.
-    -- | function | `value(context)`    |
-    -- | number   | `value`             |
-    -- | full     | width of the window |
     width = "full",
-    -- Amount of margin to add to the left of dash.
-    -- If a float < 1 is provided it is treated as a percentage of available window space.
     left_margin = 0,
-    -- Highlight for the whole line generated from the icon.
     highlight = "RenderMarkdownDash",
   },
   document = {
-    -- Turn on / off document rendering.
     enabled = true,
-    -- Additional modes to render document.
     render_modes = false,
-    -- Ability to conceal arbitrary ranges of text based on lua patterns, @see :h lua-patterns.
-    -- Relies entirely on user to set patterns that handle their edge cases.
     conceal = {
-      -- Matched ranges will be concealed using character level conceal.
       char_patterns = {},
-      -- Matched ranges will be concealed using line level conceal.
       line_patterns = {},
     },
   },
   bullet = {
-    -- Useful context to have when evaluating values.
-    -- | level | how deeply nested the list is, 1-indexed          |
-    -- | index | how far down the item is at that level, 1-indexed |
-    -- | value | text value of the marker node                     |
-
-    -- Turn on / off list bullet rendering
     enabled = true,
-    -- Additional modes to render list bullets
     render_modes = false,
-    -- Replaces '-'|'+'|'*' of 'list_item'.
-    -- If the item is a 'checkbox' a conceal is used to hide the bullet instead.
-    -- Output is evaluated depending on the type.
-    -- | function   | `value(context)`                                    |
-    -- | string     | `value`                                             |
-    -- | string[]   | `cycle(value, context.level)`                       |
-    -- | string[][] | `clamp(cycle(value, context.level), context.index)` |
     icons = { "●", "○", "◆", "◇" },
-    -- Replaces 'n.'|'n)' of 'list_item'.
-    -- Output is evaluated using the same logic as 'icons'.
     ordered_icons = function(ctx)
       local value = vim.trim(ctx.value)
       local index = tonumber(value:sub(1, #value - 1))
       return ("%d."):format(index > 1 and index or ctx.index)
     end,
-    -- Padding to add to the left of bullet point.
-    -- Output is evaluated depending on the type.
-    -- | function | `value(context)` |
-    -- | integer  | `value`          |
     left_pad = 0,
-    -- Padding to add to the right of bullet point.
-    -- Output is evaluated using the same logic as 'left_pad'.
     right_pad = 0,
-    -- Highlight for the bullet icon.
-    -- Output is evaluated using the same logic as 'icons'.
     highlight = "RenderMarkdownBullet",
-    -- Highlight for item associated with the bullet point.
-    -- Output is evaluated using the same logic as 'icons'.
     scope_highlight = {},
-    -- Priority to assign to scope highlight.
     scope_priority = nil,
   },
   checkbox = {
-    -- Checkboxes are a special instance of a 'list_item' that start with a 'shortcut_link'.
-    -- There are two special states for unchecked & checked defined in the markdown grammar.
-
-    -- Turn on / off checkbox state rendering.
     enabled = true,
-    -- Additional modes to render checkboxes.
     render_modes = false,
-    -- Render the bullet point before the checkbox.
     bullet = false,
-    -- Padding to add to the left of checkboxes.
     left_pad = 0,
-    -- Padding to add to the right of checkboxes.
     right_pad = 1,
     unchecked = {
-      -- Replaces '[ ]' of 'task_list_marker_unchecked'.
       icon = "󰄱 ",
-      -- Highlight for the unchecked icon.
       highlight = "RenderMarkdownUnchecked",
-      -- Highlight for item associated with unchecked checkbox.
       scope_highlight = nil,
     },
     checked = {
-      -- Replaces '[x]' of 'task_list_marker_checked'.
       icon = "󰱒 ",
-      -- Highlight for the checked icon.
       highlight = "RenderMarkdownChecked",
-      -- Highlight for item associated with checked checkbox.
       scope_highlight = nil,
     },
-        -- Define custom checkbox states, more involved, not part of the markdown grammar.
-        -- As a result this requires neovim >= 0.10.0 since it relies on 'inline' extmarks.
-        -- The key is for healthcheck and to allow users to change its values, value type below.
-        -- | raw             | matched against the raw text of a 'shortcut_link'           |
-        -- | rendered        | replaces the 'raw' value when rendering                     |
-        -- | highlight       | highlight for the 'rendered' icon                           |
-        -- | scope_highlight | optional highlight for item associated with custom checkbox |
-        -- stylua: ignore
-        custom = {
-            todo = { raw = '[-]', rendered = '󰥔 ', highlight = 'RenderMarkdownTodo', scope_highlight = nil },
-        },
-    -- Priority to assign to scope highlight.
+    custom = {
+      todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo", scope_highlight = nil },
+    },
     scope_priority = nil,
   },
   quote = {
-    -- Turn on / off block quote & callout rendering.
     enabled = true,
-    -- Additional modes to render quotes.
     render_modes = false,
-    -- Replaces '>' of 'block_quote'.
     icon = "▋",
-    -- Whether to repeat icon on wrapped lines. Requires neovim >= 0.10. This will obscure text
-    -- if incorrectly configured with :h 'showbreak', :h 'breakindent' and :h 'breakindentopt'.
-    -- A combination of these that is likely to work follows.
-    -- | showbreak      | '  ' (2 spaces)   |
-    -- | breakindent    | true              |
-    -- | breakindentopt | '' (empty string) |
-    -- These are not validated by this plugin. If you want to avoid adding these to your main
-    -- configuration then set them in win_options for this plugin.
     repeat_linebreak = false,
-    -- Highlight for the quote icon.
-    -- If a list is provided output is evaluated by `cycle(value, level)`.
     highlight = {
       "RenderMarkdownQuote1",
       "RenderMarkdownQuote2",
@@ -814,67 +506,37 @@ require("render-markdown").setup({
     },
   },
   pipe_table = {
-    -- Turn on / off pipe table rendering.
     enabled = true,
-    -- Additional modes to render pipe tables.
     render_modes = false,
-    -- Pre configured settings largely for setting table border easier.
-    -- | heavy  | use thicker border characters     |
-    -- | double | use double line border characters |
-    -- | round  | use round border corners          |
-    -- | none   | does nothing                      |
     preset = "none",
-    -- Determines how individual cells of a table are rendered.
-    -- | overlay | writes completely over the table, removing conceal behavior and highlights |
-    -- | raw     | replaces only the '|' characters in each row, leaving the cells unmodified |
-    -- | padded  | raw + cells are padded to maximum visual width for each column             |
-    -- | trimmed | padded except empty space is subtracted from visual width calculation      |
     cell = "padded",
-    -- Adjust the computed width of table cells using custom logic.
     cell_offset = function()
       return 0
     end,
-    -- Amount of space to put between cell contents and border.
     padding = 1,
-    -- Minimum column width to use for padded or trimmed cell.
     min_width = 0,
-        -- Characters used to replace table border.
-        -- Correspond to top(3), delimiter(3), bottom(3), vertical, & horizontal.
-        -- stylua: ignore
-        border = {
-            '┌', '┬', '┐',
-            '├', '┼', '┤',
-            '└', '┴', '┘',
-            '│', '─',
-        },
-    -- Turn on / off top & bottom lines.
+    border = {
+      "┌",
+      "┬",
+      "┐",
+      "├",
+      "┼",
+      "┤",
+      "└",
+      "┴",
+      "┘",
+      "│",
+      "─",
+    },
     border_enabled = true,
-    -- Always use virtual lines for table borders instead of attempting to use empty lines.
-    -- Will be automatically enabled if indentation module is enabled.
     border_virtual = false,
-    -- Gets placed in delimiter row for each column, position is based on alignment.
     alignment_indicator = "━",
-    -- Highlight for table heading, delimiter, and the line above.
     head = "RenderMarkdownTableHead",
-    -- Highlight for everything else, main table rows and the line below.
     row = "RenderMarkdownTableRow",
-    -- Highlight for inline padding used to add back concealed space.
     filler = "RenderMarkdownTableFill",
-    -- Determines how the table as a whole is rendered.
-    -- | none   | { enabled = false }        |
-    -- | normal | { border_enabled = false } |
-    -- | full   | uses all default values    |
     style = "full",
   },
   callout = {
-    -- Callouts are a special instance of a 'block_quote' that start with a 'shortcut_link'.
-    -- The key is for healthcheck and to allow users to change its values, value type below.
-    -- | raw        | matched against the raw text of a 'shortcut_link', case insensitive |
-    -- | rendered   | replaces the 'raw' value when rendering                             |
-    -- | highlight  | highlight for the 'rendered' text and quote markers                 |
-    -- | quote_icon | optional override for quote.icon value for individual callout       |
-    -- | category   | optional metadata useful for filtering                              |
-
     note = {
       raw = "[!NOTE]",
       rendered = "󰋽 Note",
@@ -905,7 +567,6 @@ require("render-markdown").setup({
       highlight = "RenderMarkdownError",
       category = "github",
     },
-    -- Obsidian: https://help.obsidian.md/Editing+and+formatting/Callouts
     abstract = {
       raw = "[!ABSTRACT]",
       rendered = "󰨸 Abstract",
@@ -1040,32 +701,19 @@ require("render-markdown").setup({
     },
   },
   link = {
-    -- Turn on / off inline link icon rendering.
     enabled = true,
-    -- Additional modes to render links.
     render_modes = false,
-    -- How to handle footnote links, start with a '^'.
     footnote = {
-      -- Turn on / off footnote rendering.
       enabled = true,
-      -- Inlined with content.
       icon = "󰯔 ",
-      -- Replace value with superscript equivalent.
       superscript = true,
-      -- Added before link content.
       prefix = "",
-      -- Added after link content.
       suffix = "",
     },
-    -- Inlined with 'image' elements.
     image = "󰥶 ",
-    -- Inlined with 'email_autolink' elements.
     email = "󰀓 ",
-    -- Fallback icon for 'inline_link' and 'uri_autolink' elements.
     hyperlink = "󰌹 ",
-    -- Applies to the inlined icon as a fallback.
     highlight = "RenderMarkdownLink",
-    -- Applies to WikiLink elements.
     wiki = {
       icon = "󱗖 ",
       body = function()
@@ -1074,17 +722,6 @@ require("render-markdown").setup({
       highlight = "RenderMarkdownWikiLink",
       scope_highlight = nil,
     },
-    -- Define custom destination patterns so icons can quickly inform you of what a link
-    -- contains. Applies to 'inline_link', 'uri_autolink', and wikilink nodes. When multiple
-    -- patterns match a link the one with the longer pattern is used.
-    -- The key is for healthcheck and to allow users to change its values, value type below.
-    -- | pattern   | matched against the destination text                            |
-    -- | icon      | gets inlined before the link text                               |
-    -- | kind      | optional determines how pattern is checked                      |
-    -- |           | pattern | @see :h lua-patterns, is the default if not set       |
-    -- |           | suffix  | @see :h vim.endswith()                                |
-    -- | priority  | optional used when multiple match, uses pattern length if empty |
-    -- | highlight | optional highlight for 'icon', uses fallback highlight if empty |
     custom = {
       web = { pattern = "^http", icon = "󰖟 " },
       discord = { pattern = "discord%.com", icon = "󰙯 " },
@@ -1099,93 +736,46 @@ require("render-markdown").setup({
     },
   },
   sign = {
-    -- Turn on / off sign rendering.
     enabled = true,
-    -- Applies to background of sign text.
     highlight = "RenderMarkdownSign",
   },
   inline_highlight = {
-    -- Mimics Obsidian inline highlights when content is surrounded by double equals.
-    -- The equals on both ends are concealed and the inner content is highlighted.
-
-    -- Turn on / off inline highlight rendering.
     enabled = true,
-    -- Additional modes to render inline highlights.
     render_modes = false,
-    -- Applies to background of surrounded text.
     highlight = "RenderMarkdownInlineHighlight",
   },
   indent = {
-    -- Mimic org-indent-mode behavior by indenting everything under a heading based on the
-    -- level of the heading. Indenting starts from level 2 headings onward by default.
-
-    -- Turn on / off org-indent-mode.
     enabled = false,
-    -- Additional modes to render indents.
     render_modes = false,
-    -- Amount of additional padding added for each heading level.
     per_level = 2,
-    -- Heading levels <= this value will not be indented.
-    -- Use 0 to begin indenting from the very first level.
     skip_level = 1,
-    -- Do not indent heading titles, only the body.
     skip_heading = false,
-    -- Prefix added when indenting, one per level.
     icon = "▎",
-    -- Priority to assign to extmarks.
     priority = 0,
-    -- Applied to icon.
     highlight = "RenderMarkdownIndent",
   },
   html = {
-    -- Turn on / off all HTML rendering.
     enabled = true,
-    -- Additional modes to render HTML.
     render_modes = false,
     comment = {
-      -- Turn on / off HTML comment concealing.
       conceal = true,
-      -- Optional text to inline before the concealed comment.
       text = nil,
-      -- Highlight for the inlined text.
       highlight = "RenderMarkdownHtmlComment",
     },
-    -- HTML tags whose start and end will be hidden and icon shown.
-    -- The key is matched against the tag name, value type below.
-    -- | icon            | optional icon inlined at start of tag           |
-    -- | highlight       | optional highlight for the icon                 |
-    -- | scope_highlight | optional highlight for item associated with tag |
     tag = {},
   },
   win_options = {
-    -- Window options to use that change between rendered and raw view.
-
-    -- @see :h 'conceallevel'
     conceallevel = {
-      -- Used when not being rendered, get user setting.
       default = vim.o.conceallevel,
-      -- Used when being rendered, concealed text is completely hidden.
       rendered = 3,
     },
-    -- @see :h 'concealcursor'
     concealcursor = {
-      -- Used when not being rendered, get user setting.
       default = vim.o.concealcursor,
-      -- Used when being rendered, show concealed text in all modes.
       rendered = "",
     },
   },
   overrides = {
-    -- More granular configuration mechanism, allows different aspects of buffers to have their own
-    -- behavior. Values default to the top level configuration if no override is provided. Supports
-    -- the following fields:
-    --   enabled, render_modes, max_file_size, debounce, anti_conceal, bullet, callout, checkbox,
-    --   code, dash, document, heading, html, indent, inline_highlight, latex, link, padding,
-    --   paragraph, pipe_table, quote, sign, win_options, yaml
-
-    -- Override for different buflisted values, @see :h 'buflisted'.
     buflisted = {},
-    -- Override for different buftype values, @see :h 'buftype'.
     buftype = {
       nofile = {
         render_modes = true,
@@ -1193,17 +783,11 @@ require("render-markdown").setup({
         sign = { enabled = false },
       },
     },
-    -- Override for different filetype values, @see :h 'filetype'.
     filetype = {},
   },
-  custom_handlers = {
-    -- Mapping from treesitter language to user defined handlers.
-    -- @see [Custom Handlers](doc/custom-handlers.md)
-  },
+  custom_handlers = {},
   yaml = {
-    -- Turn on / off all yaml rendering.
     enabled = true,
-    -- Additional modes to render yaml.
     render_modes = false,
   },
 })
@@ -1217,9 +801,9 @@ local highlight = {
   "RainbowViolet",
   "RainbowCyan",
 }
+
 local hooks = require("ibl.hooks")
--- create the highlight groups in the highlight setup hook, so they are reset
--- every time the colorscheme changes
+
 hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
   vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
   vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
@@ -1228,10 +812,8 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
   vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
   vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
   vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-  -- vim.api.nvim_set_hl(0, "NonText", { fg = "#5C6370" })
-  -- vim.api.nvim_set_hl(0, "Whitespace", { fg = "#5C6370" })
-  -- vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#1E1E2E" })
 end)
+
 vim.g.rainbow_delimiters = { highlight = highlight }
 require("ibl").setup({
   indent = { highlight = highlight },
@@ -1246,125 +828,3 @@ require("ibl").setup({
   scope = { enabled = true },
 })
 hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
-
--- require("image").setup({
---   backend = "kitty", -- or "ueberzug" or "sixel"
---   processor = "magick_cli", -- or "magick_rock"
---   integrations = {
---     markdown = {
---       enabled = true,
---       clear_in_insert_mode = false,
---       download_remote_images = true,
---       only_render_image_at_cursor = false,
---       only_render_image_at_cursor_mode = "popup", -- or "inline"
---       floating_windows = false, -- if true, images will be rendered in floating markdown windows
---       filetypes = { "markdown", "vimwiki", "codecompanion" }, -- markdown extensions (ie. quarto) can go here
---     },
---     neorg = {
---       enabled = true,
---       filetypes = { "norg" },
---     },
---     typst = {
---       enabled = true,
---       filetypes = { "typst" },
---     },
---     html = {
---       enabled = false,
---     },
---     css = {
---       enabled = false,
---     },
---   },
---   max_width = nil,
---   max_height = nil,
---   max_width_window_percentage = nil,
---   max_height_window_percentage = 50,
---   scale_factor = 1.0,
---   window_overlap_clear_enabled = false, -- toggles images when windows are overlapped
---   window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "snacks_notif", "scrollview", "scrollview_sign" },
---   editor_only_render_when_focused = false, -- auto show/hide images when the editor gains/looses focus
---   tmux_show_only_in_active_window = false, -- auto show/hide images in the correct Tmux window (needs visual-activity off)
---   hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" }, -- render image files as images when opened
--- })
-
-local M = require("lualine.component"):extend()
-
-M.processing = false
-M.spinner_index = 1
-
-local spinner_symbols = {
-  "⠋",
-  "⠙",
-  "⠹",
-  "⠸",
-  "⠼",
-  "⠴",
-  "⠦",
-  "⠧",
-  "⠇",
-  "⠏",
-}
-local spinner_symbols_len = 10
-
--- require("lualine").setup({
---   sections = {
---     lualine_x = {
---       function()
---         local stats = require("codecompanion").buf_get_chat(0)
---         print(stats.tokens)
---         if stats and stats.tokens > 0 then
---           return string.format("󰌪 %d / %d", stats.tokens, stats.total_tokens)
---         end
---         return "󰌪 "
---       end,
---     },
---   },
--- })
-
--- Helper to find the project root based on a marker
-local function is_angular_project()
-  local root_files = { "angular.json" } -- Can add 'nx.json' for monorepos
-  local root = vim.fs.find(root_files, { upward = true, stop = vim.uv.os_homedir() })[1]
-  return root ~= nil
-end
-
--- Create an autocommand to switch filetype for all .html files in Angular projects
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  pattern = "*.html",
-  callback = function()
-    if is_angular_project() then
-      vim.opt_local.filetype = "htmlangular"
-    end
-  end,
-})
-
--- Initializer
-function M:init(options)
-  M.super.init(self, options)
-
-  local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
-
-  vim.api.nvim_create_autocmd({ "User" }, {
-    pattern = "CodeCompanionRequest*",
-    group = group,
-    callback = function(request)
-      if request.match == "CodeCompanionRequestStarted" then
-        self.processing = true
-      elseif request.match == "CodeCompanionRequestFinished" then
-        self.processing = false
-      end
-    end,
-  })
-end
-
--- Function that runs every time statusline is updated
-function M:update_status()
-  if self.processing then
-    self.spinner_index = (self.spinner_index % spinner_symbols_len) + 1
-    return spinner_symbols[self.spinner_index]
-  else
-    return nil
-  end
-end
-
-return M

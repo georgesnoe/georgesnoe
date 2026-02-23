@@ -8,6 +8,7 @@
   "codecompanion-history.nvim": { "branch": "main", "commit": "bc1b4fe06eaaf0aa2399be742e843c22f7f1652a" },
   "codecompanion-spinner.nvim": { "branch": "main", "commit": "7797a81141e5de62eecebf2af561698ed58900dc" },
   "codecompanion.nvim": { "branch": "main", "commit": "558518f8d78a44198cd428f6bf8bf48bfa38d76d" },
+  "codeium.nvim": { "branch": "main", "commit": "821b570b526dbb05b57aa4ded578b709a704a38a" },
   "conform.nvim": { "branch": "master", "commit": "c2526f1cde528a66e086ab1668e996d162c75f4f" },
   "dressing.nvim": { "branch": "master", "commit": "2d7c2db2507fa3c4956142ee607431ddb2828639" },
   "flash.nvim": { "branch": "main", "commit": "fcea7ff883235d9024dc41e638f164a450c14ca2" },

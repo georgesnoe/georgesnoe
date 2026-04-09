@@ -24,7 +24,7 @@ I also speak French, English and a bit of Spanish and Deutsch
 
 <p align="center">
    <kbd>
-  <a href="https://x.com/georgesnoe_dev" title="Twitter - @georgesnoe_dev"><img src="https://img.shields.io/badge/-@georgesnoe-0d1117?style=flat&logo=x&logoColor=white" /></a>
+  <a href="https://x.com/georgesnoe_dev" title="Twitter - @georgesnoe_dev"><img src="https://img.shields.io/badge/-@georgesnoe_dev-0d1117?style=flat&logo=x&logoColor=white" /></a>
   <a href="https://www.linkedin.com/in/kossigeorgesnoeahombo" title="LinkedIn - Kossi Georges-Noé AHOMBO"><img src="https://img.shields.io/badge/-LinkedIn-0072b1?style=flat&logo=inspire&logoColor=white" /></a>
   <a href="https://www.reddit.com/user/georgesnoe" title="Reddit - u/georgesnoe"><img src="https://img.shields.io/badge/-georgesnoe-ff4500?style=flat&logo=reddit&logoColor=white" /></a>
   <a href="https://georgesnoe.github.io" title="Personal Website - georgesnoe.github.io"><img src="https://img.shields.io/badge/-georgesnoe.github.io-00CCB4?style=flat&logo=ApacheSpark&logoColor=white" /></a>

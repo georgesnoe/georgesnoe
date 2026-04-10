@@ -39,4 +39,4 @@ I also speak French, English and a bit of Spanish and Deutsch
   <img height="150" width="150" src="assets/images/wings/right.webp"/>
 </p>
 
-![github graph](https://github-readme-activity-graph.vercel.app/graph?username=JayantGoel001&theme=react-dark&hide_border=true&area=true)
+![github graph](https://github-readme-activity-graph.vercel.app/graph?username=georgesnoe&theme=react-dark&hide_border=true&area=true)

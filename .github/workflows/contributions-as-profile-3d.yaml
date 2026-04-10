@@ -2,12 +2,14 @@ name: Generate Contributions as Profile 3D
 
 on:
   schedule:
-    - cron: "* /24 * * *"
+    - cron: "0 5 * * *"
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
       - uses: yoshi389111/github-profile-3d-contrib@0.9.2

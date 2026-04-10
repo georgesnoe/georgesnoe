@@ -16,13 +16,14 @@ jobs:
         id: snake-gif
         with:
           github_user_name: georgesnoe
-          outputs: dist/github-contribution-grid-snake.svg
+          outputs: github-contributions-grid-snake.svg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: crazy-max/ghaction-github-pages@v5
-        with:
-          target_branch: main
-          build_dir: dist
-          keep_history: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit & Push
+        run: |
+          git config user.name ${{ github.repository_owner }}
+          git config user.email georges.ahombo@gmail.com
+          git add github-contributions-grid-snake.svg
+          if git commit -m "update: GitHub Snake Game Contributions"; then
+            git push
+          fi

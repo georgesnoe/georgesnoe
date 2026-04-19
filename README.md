@@ -41,4 +41,8 @@ I also speak French, English and a bit of Spanish and Deutsch
 
 ![GitHub graph](https://github-readme-activity-graph.vercel.app/graph?username=georgesnoe&theme=react-dark&hide_border=true&area=true)
 
+## 3D Contributions
+
+![GitHub 3D Contribution Profile](./profile-3d-contrib/profile-night-rainbow.svg)
+
 ![GitHub Snake Game](github-contribution-grid-snake.svg)

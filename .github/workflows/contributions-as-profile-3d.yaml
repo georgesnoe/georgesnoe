@@ -19,8 +19,8 @@ jobs:
           MAX_REPOS: 250
       - name: Commit & Push
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "Kossi Georges-Noé AHOMBO"
+          git config user.email "georges.ahombo@gmail.com"
           git add -A .
           if git commit -m "update: GitHub 3D Profile"; then
             git push

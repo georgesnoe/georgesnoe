@@ -16,18 +16,17 @@ I also speak French, English and a bit of Spanish and Deutsch
 </p>
 
 <p align="center">
-  <img alt="profile views" src="https://komarev.com/ghpvc/?username=georgesnoe&style=flat&color=blue"/>
-  <img alt="Github Followers" src="https://img.shields.io/github/followers/georgesnoe?label=Followers&style=social"/>
-  <img src="https://img.shields.io/github/stars/georgesnoe?label=Stars" alt="𝚃𝚘𝚝𝚊𝚕 𝚂𝚝𝚊𝚛𝚜"/>
-  <a href="https://github.com/sponsors/georgesnoe"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86"/></a>
+  <img alt="Github Followers" src="https://img.shields.io/github/followers/georgesnoe?label=Followers&style=flat-square"/>
+  <img src="https://img.shields.io/github/stars/georgesnoe?label=Stars&style=flat-square" alt="𝚃𝚘𝚝𝚊𝚕 𝚂𝚝𝚊𝚛𝚜"/>
+  <a href="https://github.com/sponsors/georgesnoe"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86&style=flat-square"/></a>
 </p>
 
 <p align="center">
    <kbd>
-  <a href="https://x.com/georgesnoe_dev" title="Twitter - @georgesnoe_dev"><img src="https://img.shields.io/badge/-@georgesnoe_dev-0d1117?style=flat&logo=x&logoColor=white" /></a>
-  <a href="https://www.linkedin.com/in/kossigeorgesnoeahombo" title="LinkedIn - Kossi Georges-Noé AHOMBO"><img src="https://img.shields.io/badge/-LinkedIn-0072b1?style=flat&logo=inspire&logoColor=white" /></a>
-  <a href="https://www.reddit.com/user/georgesnoe" title="Reddit - u/georgesnoe"><img src="https://img.shields.io/badge/-georgesnoe-ff4500?style=flat&logo=reddit&logoColor=white" /></a>
-  <a href="https://georgesnoe.github.io" title="Personal Website - georgesnoe.github.io"><img src="https://img.shields.io/badge/-georgesnoe.github.io-00CCB4?style=flat&logo=ApacheSpark&logoColor=white" /></a>
+  <a href="https://x.com/georgesnoe_dev" title="Twitter - @georgesnoe_dev"><img src="https://img.shields.io/badge/-@georgesnoe_dev-0d1117?style=flat-square&logo=x&logoColor=white" /></a>
+  <a href="https://www.linkedin.com/in/kossigeorgesnoeahombo" title="LinkedIn - Kossi Georges-Noé AHOMBO"><img src="https://img.shields.io/badge/-LinkedIn-0072b1?style=flat-square&logo=inspire&logoColor=white" /></a>
+  <a href="https://www.reddit.com/user/georgesnoe" title="Reddit - u/georgesnoe"><img src="https://img.shields.io/badge/-georgesnoe-ff4500?style=flat-square&logo=reddit&logoColor=white" /></a>
+  <a href="https://georgesnoe.github.io" title="Personal Website - georgesnoe.github.io"><img src="https://img.shields.io/badge/-georgesnoe.github.io-00CCB4?style=flat-square&logo=ApacheSpark&logoColor=white" /></a>
   </kbd>
 </p>
 
